@@ -1,12 +1,7 @@
 import streamlit as st
 from PIL import Image
-import numpy as np
 import os
-import ultralytics
-import sys
 
-
-from ultralytics import YOLO
 from utils.detector import YOLOModel
 from utils.visualization import draw_boxes
 
@@ -21,20 +16,20 @@ def load_model():
 model = load_model()
 
 st.title("😷 Face Mask Detection – YOLOv8")
-st.markdown("Upload an image or use the demo example.")
+st.markdown("Upload an image to run detection.")
 
+# File uploader
 uploaded = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"])
 
 if uploaded:
     image = Image.open(uploaded).convert("RGB")
+    st.image(image, caption="Input Image", use_container_width=True)
+
+    if st.button("Run Detection"):
+        with st.spinner("Running YOLOv8 inference..."):
+            results = model.predict(image)
+            output = draw_boxes(image, results)
+
+        st.image(output, caption="Detection Result", use_container_width=True)
 else:
-    image = Image.open(DEMO_IMAGE).convert("RGB")
-
-st.image(image, caption="Input Image", use_container_width=True)
-
-if st.button("Run Detection"):
-    with st.spinner("Running YOLOv8 inference..."):
-        results = model.predict(image)
-        output = draw_boxes(image, results)
-
-    st.image(output, caption="Detection Result", use_container_width=True)
+    st.warning("Please upload an image to run detection.")
