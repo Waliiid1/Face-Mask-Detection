@@ -13,7 +13,6 @@ from utils.visualization import draw_boxes
 st.set_page_config(page_title="YOLOv8 Mask Detection", layout="centered")
 
 MODEL_PATH = os.path.join("model", "best.pt")
-DEMO_IMAGE = os.path.join("assets", "demo.png")
 
 @st.cache_resource
 def load_model():
